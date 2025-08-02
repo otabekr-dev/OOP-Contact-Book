@@ -49,10 +49,53 @@ class ContactBook:
         self.console.print(table)
 
     def remove_contact(self):
-        pass
+        name_2_del = input('Ismni kiriting: ').strip().title()
+        all_c = self.db.get_contacts()
+        new_contacts = []
+
+        for contact in all_c:
+            if contact.name != name_2_del:
+                new_contacts.append(contact)
+
+        
+        if len(new_contacts) < len(all_c):
+            self.db.contacts = new_contacts
+            self.db.save_contacts()
+            self.console.print("[green]Contact successfully deleted!")
+        else:
+            self.console.print("[red]Contact not found.")
+
+
+
 
     def update_contact(self):
-        pass
+        uc = input('Yangilamoqchi bulgan kontaktingizni ismini kiriting: ').strip().title()
+
+        all_contacts = self.db.get_contacts()
+        updated = False
+
+        for contact in all_contacts:
+            if contact.name == uc:
+                print('Yangi malumotlarni kiriting: ')
+                u_name = input('Ism: ')
+                u_phone = input('Telefon raqam: ')
+                u_email = input('email: ')
+
+                if u_name:
+                    contact.name = u_name
+                if u_phone:
+                    contact.phone = u_phone
+                if u_email:
+                    contact.email = u_email
+
+                updated = True
+                break
+        if updated :
+            self.db.contacts = all_contacts
+            self.db.save_contacts()
+            self.console.print('[green] Kontakt malumotlari yangilandi')
+        else:
+            self.console.print('[red] Mavjud bulmagan kontakt')                        
 
     def search_contact(self):
         search = input("Search: ").strip().lower()
@@ -87,3 +130,11 @@ class ContactBook:
                 self.print_contacts()
             elif choice == '3':
                 self.search_contact()
+            elif choice == '4':
+                self.update_contact()
+            elif choice == '5':
+                self.remove_contact()
+            elif choice == '6':
+                break
+            else:
+                print("Mavjud bo'lmagan buyruq")                
